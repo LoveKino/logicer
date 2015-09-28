@@ -1,0 +1,30 @@
+{
+  "name": "logicer",
+  "version": "0.0.1",
+  "description": "Logic System",
+  "main": "index.js",
+  "dependencies": {
+    "expressioner": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "babel": "*",
+    "chokidar": "*"
+  },
+  "scripts": {
+    "test": "mocha --compilers js:babel/register test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LoveKino/logicer.git"
+  },
+  "keywords": [
+    "logic"
+  ],
+  "author": "ddchen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LoveKino/logicer/issues"
+  },
+  "homepage": "https://github.com/LoveKino/logicer#readme"
+}
