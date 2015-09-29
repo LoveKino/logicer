@@ -20,9 +20,22 @@ describe("base", () => {
         logicCom.defineUnit("a", a => false);
         logicCom.defineUnit("b", a => false);
         logicCom.defineUnit("c", a => !!a);
+        logicCom.defineUnit("d", a => !a);
 
-        let strOrNum = logicCom.translate("a | b & ~c");
+        let strOrNum = logicCom.translate("a | (~b & (c | d))");
 
         assert(strOrNum(10) === true, false);
+    });
+
+    it("logicmap", () => {
+        let logicCom = logic({
+            a: a => false,
+            b: a => true
+        });
+        logicCom.defineUnit("c", a => !!a);
+
+        let strOrNum = logicCom.translate("a | (~b & c)");
+
+        assert(strOrNum(10) === false, false);
     });
 });

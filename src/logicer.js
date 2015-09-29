@@ -18,36 +18,38 @@
  */
 import ast from "expressioner";
 
-export default () => {
-    let logicMap = {};
-
+export default (logicMap = {}) => {
     var operationMap = {
         "&": {
             priority: 10,
             opNum: 2,
             execute: (name1, name2) => (...y) => {
-                console.log(name1, name2);
-                return logicMap[name1].apply(undefined, y) &&
-                    logicMap[name2].apply(undefined, y)
+                let fun1 = name1,
+                    fun2 = name2;
+                if (typeof fun1 === "string") fun1 = logicMap[name1];
+                if (typeof fun2 === "string") fun2 = logicMap[name2];
+                return fun1.apply(undefined, y) && fun2.apply(undefined, y);
             }
         },
         "|": {
             priority: 10,
             opNum: 2,
             execute: (name1, name2) => (...y) => {
-                console.log(name1, name2);
-                let fun1 = name1, fun2 = names;
-                if(typeof fun1 === "string") fun1 = logicMap[name1];
-                if(typeof fun2 === "string")
-                return logicMap[name1].apply(undefined, y) ||
-                    logicMap[name2].apply(undefined, y)
+                let fun1 = name1,
+                    fun2 = name2;
+                if (typeof fun1 === "string") fun1 = logicMap[name1];
+                if (typeof fun2 === "string") fun2 = logicMap[name2];
+                return fun1.apply(undefined, y) || fun2.apply(undefined, y);
             }
         },
         "~": {
             priority: 40,
             opNum: 1,
-            execute: (name) => (...y) =>
-                !logicMap[name].apply(undefined, y)
+            execute: (name) => (...y) => {
+                let fun = name;
+                if (typeof fun === "string") fun = logicMap[name];
+                return !fun.apply(undefined, y);
+            }
         },
         "(": {
             type: "start"
