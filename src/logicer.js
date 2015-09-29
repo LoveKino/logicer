@@ -79,7 +79,12 @@ export default (logicMap = {}) => {
         }
     }
 
-    var translate = (str) => translator(str).value;
+    var translate = (str) => {
+        let value = translator(str).value;
+        if(typeof value === "string")
+            value = logicMap[value];
+        return value;
+    }
 
     return {
         defineUnit,

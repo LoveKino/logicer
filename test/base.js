@@ -15,6 +15,13 @@ describe("base", () => {
         assert(newF3() === true, true);
     });
 
+    it("single", () => {
+        let logicCom = logic();
+        logicCom.defineUnit("test", () => true);
+        let newF = logicCom.translate("test");
+        assert(newF() === true, true);
+    });
+
     it("blanket", () => {
         let logicCom = logic();
         logicCom.defineUnit("a", a => false);
