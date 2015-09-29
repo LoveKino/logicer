@@ -19,7 +19,7 @@
 import ast from "expressioner";
 
 export default (logicMap = {}) => {
-    if(logicMap && typeof logicMap !== "object")
+    if(!logicMap || typeof logicMap !== "object")
         throw new TypeError("accept object only.");
 
     var operationMap = {
