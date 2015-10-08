@@ -1,6 +1,6 @@
 ## Logicer
 
-Logic computation is common. This module just try to make logic expresion simpler. It's try to do something like this:
+This module try to do something like this:
 
 ```
 var isOk = function(a, b, c){
