@@ -18,11 +18,8 @@
  */
 import ast from "expressioner";
 
-export default (logicMap = {}) => {
-    if(!logicMap || typeof logicMap !== "object")
-        throw new TypeError("accept object only.");
-
-    var operationMap = {
+var getOperationMap = logicMap => {
+    return {
         "&": {
             priority: 10,
             opNum: 2,
@@ -62,32 +59,51 @@ export default (logicMap = {}) => {
             match: "("
         }
     }
+}
+
+var defineUnit = (name, judge, logicMap, operationMap) => {
+    for (let opName in operationMap) {
+        if (name.indexOf(opName) !== -1) {
+            throw new TypeError("unexpected name, contain special symbol '" + opName + "' in " + name);
+        }
+    }
+    if (typeof judge === "function" || judge instanceof RegExp) {
+        logicMap[name] = judge;
+    } else {
+        throw new TypeError("unexpected type judge, expect function or RegExp instance.");
+    }
+}
+
+export default (setMap = {}, cacheMax = 10000) => {
+    if (!setMap || typeof setMap !== "object")
+        throw new TypeError("accept object only.");
+
+    let logicMap = {},
+        cacheMap = {},
+        counter = 0;
+    for (let name in setMap) {
+        defineUnit(name, setMap[name], logicMap, operationMap);
+    }
+
+    var operationMap = getOperationMap(logicMap);
 
     var translator = ast(operationMap);
 
-    var defineUnit = (name, judge) => {
-        for (let opName in operationMap) {
-            if (name.indexOf(opName) !== -1) {
-                throw new TypeError("unexpected name, contain special symbol, like " +
-                    metalist.join(" "));
-            }
-        }
-        if (typeof judge === "function" || judge instanceof RegExp) {
-            logicMap[name] = judge;
-        } else {
-            throw new TypeError("unexpected type judge, expect function or RegExp instance.");
-        }
-    }
-
     var translate = (str) => {
+        if (cacheMap.hasOwnProperty(str)) {
+            return cacheMap[str];
+        }
         let value = translator(str).value;
-        if(typeof value === "string")
+        if (typeof value === "string")
             value = logicMap[value];
+        if (counter < cacheMax) {
+            cacheMap[str] = value;
+            counter++;
+        }
         return value;
     }
 
     return {
-        defineUnit,
         translate
     }
 }

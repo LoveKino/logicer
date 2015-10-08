@@ -3,9 +3,10 @@ import assert from "assert";
 
 describe("base", () => {
     it("base", () => {
-        let logicCom = logic();
-        logicCom.defineUnit("test1", () => true);
-        logicCom.defineUnit("test2", () => false);
+        let logicCom = logic({
+            "test1": () => true,
+            "test2": () => false
+        });
 
         let newF1 = logicCom.translate("test1 | test2");
         let newF2 = logicCom.translate("test1 & test2");
@@ -16,18 +17,20 @@ describe("base", () => {
     });
 
     it("single", () => {
-        let logicCom = logic();
-        logicCom.defineUnit("test", () => true);
+        let logicCom = logic({
+            "test": () => true
+        });
         let newF = logicCom.translate("test");
         assert(newF() === true, true);
     });
 
     it("blanket", () => {
-        let logicCom = logic();
-        logicCom.defineUnit("a", a => false);
-        logicCom.defineUnit("b", a => false);
-        logicCom.defineUnit("c", a => !!a);
-        logicCom.defineUnit("d", a => !a);
+        let logicCom = logic({
+            "a": a => false,
+            "b": a => false,
+            "c": a => !!a,
+            "d": a => !a
+        });
 
         let strOrNum = logicCom.translate("a | (~b & (c | d))");
 
@@ -37,12 +40,10 @@ describe("base", () => {
     it("logicmap", () => {
         let logicCom = logic({
             a: a => false,
-            b: a => true
+            b: a => true,
+            "c": a => !!a
         });
-        logicCom.defineUnit("c", a => !!a);
-
         let strOrNum = logicCom.translate("a | (~b & c)");
-
         assert(strOrNum(10) === false, false);
     });
 });
